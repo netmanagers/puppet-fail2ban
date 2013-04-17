@@ -1,0 +1,45 @@
+[DEFAULT]
+<% if scope.lookupvar("fail2ban::ignoreip") != '' -%>
+ignoreip = <%= scope.lookupvar("fail2ban::ignoreip") * ' ' %>
+<% end -%>
+<% if scope.lookupvar("fail2ban::bantime") != '' -%>
+bantime  = <%= scope.lookupvar("fail2ban::bantime") %>
+<% end -%>
+<% if scope.lookupvar("fail2ban::findtime") != '' -%>
+findtime = <%= scope.lookupvar("fail2ban::findtime") %>
+<% end -%>
+<% if scope.lookupvar("fail2ban::maxretry") != '' -%>
+maxretry = <%= scope.lookupvar("fail2ban::maxretry") %>
+<% end -%>
+<% if scope.lookupvar("fail2ban::backend") != '' -%>
+backend = <%= scope.lookupvar("fail2ban::backend") %>
+<% end -%>
+<% if scope.lookupvar("fail2ban::mailto") != '' -%>
+destemail = <%= scope.lookupvar("fail2ban::mailto") %>
+<% end -%>
+<% if scope.lookupvar("fail2ban::banaction") != '' -%>
+banaction = <%= scope.lookupvar("fail2ban::banaction") %>
+<% end -%>
+<% if scope.lookupvar("fail2ban::mta") != '' -%>
+mta = <%= scope.lookupvar("fail2ban::mta") %>
+<% end -%>
+<% if scope.lookupvar("fail2ban::jails_protocol") != '' -%>
+protocol = <%= scope.lookupvar("fail2ban::jails_protocol") %>
+<% end -%>
+<% if scope.lookupvar("fail2ban::jails_chain") != '' -%>
+chain = <%= scope.lookupvar("fail2ban::jails_chain") %>
+<% end -%>
+
+### Default action ###
+## The simplest action to take: ban only
+action_ = %(banaction)s[name=%(__name__)s, port="%(port)s", protocol="%(protocol)s", chain="%(chain)s"]
+
+## ban & send an e-mail with whois report and relevant log lines
+## to the destemail.
+action_mwl = %(banaction)s[name=%(__name__)s, port="%(port)s", protocol="%(protocol)s", chain="%(chain)s"]
+             %(mta)s-whois-lines[name=%(__name__)s, dest="%(destemail)s", logpath=%(logpath)s, chain="%(chain)s"]
+
+# Choose default action.  To change, just override value of 'action' with the
+# interpolation to the chosen action shortcut (e.g.  action_mw, action_mwl, etc) in jail.local
+# globally (section [DEFAULT]) or per specific section
+action = %(action_mwl)s

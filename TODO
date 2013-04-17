@@ -1,0 +1,5 @@
+Clean up all the unused code resulting from module cloning:
+
+Travis and Modulefile information surely need to be corrected, as we are not using them in our deployments right now.
+
+Some variables, etc. that are not in use.
