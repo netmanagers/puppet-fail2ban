@@ -1,4 +1,4 @@
-name    'nm-fail2ban'
+name    'netmanagers-fail2ban'
 version '1.0.0'
 author  'Javier Bertoli'
 license 'Apache2'
