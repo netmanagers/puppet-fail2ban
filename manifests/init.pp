@@ -166,27 +166,6 @@
 #   Can be defined also by the (top scope) variables $fail2ban_puppi_helper
 #   and $puppi_helper
 #
-# [*firewall*]
-#   Set to 'true' to enable firewalling of the services provided by the module
-#   Can be defined also by the (top scope) variables $fail2ban_firewall
-#   and $firewall
-#
-# [*firewall_tool*]
-#   Define which firewall tool(s) (ad defined in Example42 firewall module)
-#   you want to use to open firewall for fail2ban port(s)
-#   Can be defined also by the (top scope) variables $fail2ban_firewall_tool
-#   and $firewall_tool
-#
-# [*firewall_src*]
-#   Define which source ip/net allow for firewalling fail2ban. Default: 0.0.0.0/0
-#   Can be defined also by the (top scope) variables $fail2ban_firewall_src
-#   and $firewall_src
-#
-# [*firewall_dst*]
-#   Define which destination ip to use for firewalling. Default: $ipaddress
-#   Can be defined also by the (top scope) variables $fail2ban_firewall_dst
-#   and $firewall_dst
-#
 # [*debug*]
 #   Set to 'true' to enable modules debugging
 #   Can be defined also by the (top scope) variables $fail2ban_debug and $debug
@@ -258,18 +237,6 @@
 # [*log_file*]
 #   Log file(s). Used by puppi
 #
-# [*port*]
-#   The listening port, if any, of the service.
-#   This is used by monitor, firewall and puppi (optional) components
-#   Note: This doesn't necessarily affect the service configuration file
-#   Can be defined also by the (top scope) variable $fail2ban_port
-#
-# [*protocol*]
-#   The protocol used by the the service.
-#   This is used by monitor, firewall and puppi (optional) components
-#   Can be defined also by the (top scope) variable $fail2ban_protocol
-#
-#
 # == Examples
 #
 # You can use this class in 2 ways:
@@ -323,8 +290,6 @@ class fail2ban (
   $data_dir              = params_lookup( 'data_dir' ),
   $log_dir               = params_lookup( 'log_dir' ),
   $log_file              = params_lookup( 'log_file' ),
-  $port                  = params_lookup( 'port' ),
-  $protocol              = params_lookup( 'protocol' ),
   $ignoreip              = params_lookup( 'ignoreip' ),
   $bantime               = params_lookup( 'bantime' ),
   $findtime              = params_lookup( 'findtime' ),
@@ -354,7 +319,6 @@ class fail2ban (
   $bool_disableboot=any2bool($disableboot)
   $bool_monitor=any2bool($monitor)
   $bool_puppi=any2bool($puppi)
-  $bool_firewall=any2bool($firewall)
   $bool_debug=any2bool($debug)
   $bool_audit_only=any2bool($audit_only)
   $bool_noops=any2bool($noops)
@@ -400,13 +364,6 @@ class fail2ban (
     $manage_monitor = false
   } else {
     $manage_monitor = true
-  }
-
-  if $fail2ban::bool_absent == true
-  or $fail2ban::bool_disable == true {
-    $manage_firewall = false
-  } else {
-    $manage_firewall = true
   }
 
   $manage_audit = $fail2ban::bool_audit_only ? {
@@ -536,22 +493,6 @@ class fail2ban (
         enable   => $fail2ban::manage_monitor,
         noop     => $fail2ban::bool_noops,
       }
-    }
-  }
-
-
-  ### Firewall management, if enabled ( firewall => true )
-  if $fail2ban::bool_firewall == true and $fail2ban::port != '' {
-    firewall { "fail2ban_${fail2ban::protocol}_${fail2ban::port}":
-      source      => $fail2ban::firewall_src,
-      destination => $fail2ban::firewall_dst,
-      protocol    => $fail2ban::protocol,
-      port        => $fail2ban::port,
-      action      => 'allow',
-      direction   => 'input',
-      tool        => $fail2ban::firewall_tool,
-      enable      => $fail2ban::manage_firewall,
-      noop        => $fail2ban::bool_noops,
     }
   }
 

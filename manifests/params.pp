@@ -120,9 +120,6 @@ class fail2ban::params {
   $jails_template_header = 'fail2ban/concat/jail.local-header.erb'
   $jails_template_footer = 'fail2ban/concat/jail.local-footer.erb'
 
-  $protocol  = ''
-  $port = ''
-
   # General Settings
   $my_class = ''
   $source = ''
@@ -140,10 +137,6 @@ class fail2ban::params {
   $monitor = false
   $monitor_tool = ''
   $monitor_target = $::ipaddress
-  $firewall = false
-  $firewall_tool = ''
-  $firewall_src = '0.0.0.0/0'
-  $firewall_dst = $::ipaddress
   $puppi = false
   $puppi_helper = 'standard'
   $debug = false
