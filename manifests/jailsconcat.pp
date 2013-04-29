@@ -8,7 +8,7 @@
 # Note that the fail2ban::jail define
 # inserts (by default) its rules with priority 50.
 #
-class fail2ban::concat {
+class fail2ban::jailsconcat {
 
   include fail2ban
   include concat::setup

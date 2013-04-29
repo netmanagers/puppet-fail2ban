@@ -77,29 +77,24 @@
 #   to conventional 'mail'.
 #   Default: sendmail
 #
-# [*jails_protocol*]
-#   Default: tcp
-#
-# [*jails_chain*]
-#   Specify chain where jumps would need to be added in iptables-* actions
-#   Default: INPUT
+# [*jails_file*]
+#   Path to 'jail.local' file
 #
 # [*jails_config*]
 #   Define how you want to manage jails configuration:
-#    "file" - To provide jails.local as a normal file
+#    "file"   - To provide jail.local as a normal file. If you choose this option, 
+#               set ONE of [*jails_source*] or [*jails_template*]
 #    "concat" - To build it up using different fragments
 #             - This option, set as default, permits the use of the fail2ban::jail define
 #
 # [*jails_source*]
-#   Sets the content of source parameter for the jails.local configuration file
-#   Note that single stanzas of jails.local file can be managed also (and alternatively)
-#   by fail2ban::jails
+#   Sets the content of source parameter for the jail.local configuration file
+#   Note that single stanzas of jail.local can be managed by fail2ban::jails
 #
 # [*jails_template*]
-#   Sets the path to the template to use as content for the jails.local configuration file
+#   Sets the path to the template to use as content for the jail.local configuration file
 #   If defined, fail2ban jails config file has: content => content("$jails_template")
 #   Note source and template parameters are mutually exclusive: don't use both
-#   Can be defined also by the (top scope) variable $fail2ban_jails_template
 #
 # [*jails_template_header*]
 #   Path to the template to use as header with concat
@@ -108,6 +103,13 @@
 # [*jails_template_footer*]
 #   Path to the template to use as footer with concat
 #   Used by fail2ban::jails
+#
+# [*jails_protocol*]
+#   Default: tcp
+#
+# [*jails_chain*]
+#   Specify chain where jumps would need to be added in iptables-* actions
+#   Default: INPUT
 #
 # [*options*]
 #   An hash of custom options to be used in templates for arbitrary settings.
@@ -386,16 +388,6 @@ class fail2ban (
     default   => template($fail2ban::template),
   }
 
-  $manage_file_jails_source = $fail2ban::jails_source ? {
-    ''        => undef,
-    default   => $fail2ban::jails_source,
-  }
-
-  $manage_file_jails_content = $fail2ban::jails_template ? {
-    ''        => undef,
-    default   => template($fail2ban::jails_template),
-  }
-
   ### Managed resources
   package { $fail2ban::package:
     ensure  => $fail2ban::manage_package,
@@ -427,10 +419,37 @@ class fail2ban (
     noop    => $fail2ban::bool_noops,
   }
 
-  # How to manage fail2ban configuration
+  # How to manage fail2ban jail.local configuration
   case $fail2ban::jails_config {
-    'file': { include fail2ban::file }
-    'concat': { include fail2ban::concat }
+    'file': {
+      $manage_file_jails_source = $fail2ban::jails_source ? {
+        ''        => undef,
+        default   => $fail2ban::jails_source,
+      }
+    
+      $manage_file_jails_content = $fail2ban::jails_template ? {
+        ''        => undef,
+        default   => template($fail2ban::jails_template),
+      }
+    
+      file { 'jail.local':
+        ensure  => $fail2ban::manage_file,
+        path    => $fail2ban::jails_file,
+        mode    => $fail2ban::jails_file_mode,
+        owner   => $fail2ban::jails_file_owner,
+        group   => $fail2ban::jails_file_group,
+        require => Package[$fail2ban::package],
+        notify  => $fail2ban::manage_service_autorestart,
+        source  => $fail2ban::manage_file_jails_source,
+        content => $fail2ban::manage_file_jails_content,
+        replace => $fail2ban::manage_file_replace,
+        audit   => $fail2ban::manage_audit,
+        noop    => $fail2ban::bool_noops,
+      }
+    }
+    'concat': { include fail2ban::jailsconcat 
+    
+    }
     default: { }
   }
 

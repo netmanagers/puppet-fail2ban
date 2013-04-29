@@ -13,6 +13,31 @@ describe 'fail2ban' do
     it { should contain_file('fail2ban.conf').with_ensure('present') }
   end
 
+  describe 'Test jails config undefined' do
+    let(:params) { {:jails_config => '' } }
+    it { should_not contain_file('jail.local') }
+  end
+
+  describe 'Test jails managed throuh file - source' do
+    let(:params) { {:jails_config => 'file', :jails_source => 'puppet:///modules/fail2ban/spec' } }
+    it { should contain_file('jail.local').with_source('puppet:///modules/fail2ban/spec') }
+    it { should contain_file('jail.local').without_content }
+  end
+
+  describe 'Test jails managed throuh file - template' do
+    let(:params) { {:jails_config => 'file', :jails_template => 'fail2ban/spec.erb', :options => { 'opt_a' => 'value_a' } } }
+    it { should contain_file('jail.local').with_content(/fqdn: rspec.example42.com/) }
+    it { should contain_file('jail.local').without_source }
+    it { should contain_file('jail.local').with_content(/value_a/) }
+  end
+
+#  describe 'Test jails managed throuh concat' do
+#    let(:params) { {:jails_config => 'concat' } }
+#    it { should include_class('fail2ban::jailsconcat') }
+#    it { should contain_fail2ban__jailsconcat() }
+#
+#  end
+
   describe 'Test installation of a specific version' do
     let(:params) { {:version => '1.0.42' } }
     it { should contain_package('fail2ban').with_ensure('1.0.42') }

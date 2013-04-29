@@ -2,16 +2,22 @@
 #
 # Adds a custom fail2ban jail
 # Supported arguments:
-# $jailname - The name you want to give the jail. If not set, defaults to == $title
-# $order    - The order in the jail.local file. Default 50. Generally you don't need to change it
+# $jailname - The name you want to give the jail. 
+#             If not set, defaults to == $title
+# $order    - The order in the jail.local file. 
+#             Default 50. Generally you don't need to change it
 # $status   - enabled / disabled. If disabled, the rule _IS ADDED_  to the jail.local file
 #             but it will not be active. Compare with the next one.
+#             Defaults to enabled
 # $enable   - true / false. If false, the rule _IS NOT ADDED_ to the jail.local file
-# $filter   - The filter rule to use. If empty, defaults to == $jailname.
+#             Defaults to true
+# $filter   - The filter rule to use. 
+#             If empty, defaults to == $jailname.
 # $port     - The port to filter. It can be an array of ports.
-# $action   - The action to take when
 # $logpath  - The log file to monitor
 # $maxretry - How many fails are acceptable
+# $action   - The action to take when fail2ban finds $maxretry $filter-matching records in
+#             $logpath
 # $bantime  - How much time to apply the ban, in seconds
 
 define fail2ban::jail (
