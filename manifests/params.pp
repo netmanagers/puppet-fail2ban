@@ -103,6 +103,9 @@ class fail2ban::params {
     default => '/var/log/fail2ban/fail2ban.log',
   }
 
+  $log_level = '3'
+  $socket    = '/var/run/fail2ban/fail2ban.sock'
+
   $ignoreip  = ['127.0.0.1/8']
   $bantime   = '600'
   $findtime  = '600'
@@ -114,7 +117,7 @@ class fail2ban::params {
   $jails_protocol  = 'tcp'
   $jails_chain     = 'INPUT'
 
-  $jails = []
+  $jails = ''
   $jails_source = ''
   $jails_template = ''
   $jails_template_header = 'fail2ban/concat/jail.local-header.erb'
@@ -123,9 +126,9 @@ class fail2ban::params {
   # General Settings
   $my_class = ''
   $source = ''
+  $template = ''
   $source_dir = ''
   $source_dir_purge = false
-  $template = ''
   $options = ''
   $service_autorestart = true
   $version = 'present'

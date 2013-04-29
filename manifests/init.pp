@@ -14,7 +14,7 @@
 #   Can be defined also by the (top scope) variable $fail2ban_myclass
 #
 # [*source*]
-#   Sets the content of source parameter for main configuration file
+#   Sets the content of source parameter for main configuration file (fail2ban.conf)
 #   If defined, fail2ban main config file will have the param: source => $source
 #   Can be defined also by the (top scope) variable $fail2ban_source
 #
@@ -79,22 +79,27 @@
 #
 # [*jails_file*]
 #   Path to 'jail.local' file
+#   Default: /etc/fail2ban/jail.local
 #
 # [*jails_config*]
 #   Define how you want to manage jails configuration:
 #    "file"   - To provide jail.local as a normal file. If you choose this option, 
 #               set ONE of [*jails_source*] or [*jails_template*]
 #    "concat" - To build it up using different fragments
-#             - This option, set as default, permits the use of the fail2ban::jail define
+#             - This option, (preferred), permits the use of the fail2ban::jail define
+#   Default: empty. Uses "jail.local" from distribution, if any.
 #
 # [*jails_source*]
 #   Sets the content of source parameter for the jail.local configuration file
-#   Note that single stanzas of jail.local can be managed by fail2ban::jails
 #
 # [*jails_template*]
 #   Sets the path to the template to use as content for the jail.local configuration file
 #   If defined, fail2ban jails config file has: content => content("$jails_template")
 #   Note source and template parameters are mutually exclusive: don't use both
+#
+# [*jails*]
+#   When using [*jails_template*] you can have some control on what jail is enabled or not
+#   setting an array named "jails", containing the names of the jail you want enabled.
 #
 # [*jails_template_header*]
 #   Path to the template to use as header with concat
@@ -112,7 +117,7 @@
 #   Default: INPUT
 #
 # [*options*]
-#   An hash of custom options to be used in templates for arbitrary settings.
+#   A hash of custom options to be used in templates for arbitrary settings.
 #   Can be defined also by the (top scope) variable $fail2ban_options
 #
 # [*service_autorestart*]
@@ -236,8 +241,20 @@
 # [*log_dir*]
 #   Base logs directory. Used by puppi
 #
+# [*log_level*]
+#   Set the log level output.
+#          1 = ERROR
+#          2 = WARN
+#          3 = INFO
+#          4 = DEBUG
+#   Default:  3
+#
 # [*log_file*]
-#   Log file(s). Used by puppi
+#   Log file(s). Used by puppi also.
+#
+# [*socket*]
+#   Socket file used by fail2ban-client to communicate with fail2ban.
+#   Default: /var/run/fail2ban/fail2ban.sock
 #
 # == Examples
 #
@@ -246,7 +263,6 @@
 # - Call fail2ban as a parametrized class
 #
 # See README for details.
-#
 #
 # == Author
 #   Alessandro Franceschi <al@lab42.it/>
@@ -292,6 +308,8 @@ class fail2ban (
   $data_dir              = params_lookup( 'data_dir' ),
   $log_dir               = params_lookup( 'log_dir' ),
   $log_file              = params_lookup( 'log_file' ),
+  $log_level             = params_lookup( 'log_level' ),
+  $socket                = params_lookup( 'socket' ),
   $ignoreip              = params_lookup( 'ignoreip' ),
   $bantime               = params_lookup( 'bantime' ),
   $findtime              = params_lookup( 'findtime' ),
@@ -421,7 +439,16 @@ class fail2ban (
 
   # How to manage fail2ban jail.local configuration
   case $fail2ban::jails_config {
+    'concat': { include fail2ban::jailsconcat }
     'file': {
+      $array_jails = is_array($fail2ban::jails) ? {
+        false     => $fail2ban::jails ? {
+          ''      => [],
+          default => [$fail2ban::jails],
+        },
+        default   => $fail2ban::jails,
+      }
+
       $manage_file_jails_source = $fail2ban::jails_source ? {
         ''        => undef,
         default   => $fail2ban::jails_source,
@@ -431,7 +458,7 @@ class fail2ban (
         ''        => undef,
         default   => template($fail2ban::jails_template),
       }
-    
+   
       file { 'jail.local':
         ensure  => $fail2ban::manage_file,
         path    => $fail2ban::jails_file,
@@ -446,9 +473,6 @@ class fail2ban (
         audit   => $fail2ban::manage_audit,
         noop    => $fail2ban::bool_noops,
       }
-    }
-    'concat': { include fail2ban::jailsconcat 
-    
     }
     default: { }
   }

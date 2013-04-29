@@ -25,18 +25,19 @@ describe 'fail2ban' do
   end
 
   describe 'Test jails managed throuh file - template' do
+    let(:facts) { {:operatingsystem => 'Debian' } }
+    let(:params) { {:jails_config => 'file', :jails_template => 'fail2ban/jail.local.erb', :jails => 'ssh' } }
+    it { should contain_file('jail.local').without_source }
+    it { should contain_file('jail.local').with_content(/"*ssh-iptables]
+enabled  = true*/) }
+  end
+
+  describe 'Test jails managed throuh file - custom template' do
     let(:params) { {:jails_config => 'file', :jails_template => 'fail2ban/spec.erb', :options => { 'opt_a' => 'value_a' } } }
     it { should contain_file('jail.local').with_content(/fqdn: rspec.example42.com/) }
     it { should contain_file('jail.local').without_source }
     it { should contain_file('jail.local').with_content(/value_a/) }
   end
-
-#  describe 'Test jails managed throuh concat' do
-#    let(:params) { {:jails_config => 'concat' } }
-#    it { should include_class('fail2ban::jailsconcat') }
-#    it { should contain_fail2ban__jailsconcat() }
-#
-#  end
 
   describe 'Test installation of a specific version' do
     let(:params) { {:version => '1.0.42' } }
