@@ -6,18 +6,20 @@
 #             If not set, defaults to == $title
 # $order    - The order in the jail.local file.
 #             Default 50. Generally you don't need to change it
-# $status   - enabled / disabled. If disabled, the rule _IS ADDED_  to the jail.local file
-#             but it will not be active. Compare with the next one.
+# $status   - enabled / disabled. If disabled, the rule _IS ADDED_  to the
+#             jail.local file but it will not be active. Compare with the
+#             next one.
 #             Defaults to enabled
-# $enable   - true / false. If false, the rule _IS NOT ADDED_ to the jail.local file
+# $enable   - true / false. If false, the rule _IS NOT ADDED_ to the
+#             jail.local file
 #             Defaults to true
 # $filter   - The filter rule to use.
 #             If empty, defaults to == $jailname.
 # $port     - The port to filter. It can be an array of ports.
 # $logpath  - The log file to monitor
 # $maxretry - How many fails are acceptable
-# $action   - The action to take when fail2ban finds $maxretry $filter-matching records in
-#             $logpath
+# $action   - The action to take when fail2ban finds $maxretry $filter-matching
+#             records in $logpath
 # $bantime  - How much time to apply the ban, in seconds
 
 define fail2ban::jail (
@@ -51,7 +53,8 @@ define fail2ban::jail (
     default         => true,
   }
 
-  # If we don't specify a filter, we take as a default the jailname as filtername
+  # If we don't specify a filter, we take as a default the
+  # jailname as filtername
   $real_filter = $filter ? {
     ''      => $real_jailname,
     default => $filter,

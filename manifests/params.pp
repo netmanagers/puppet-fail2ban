@@ -63,7 +63,8 @@ class fail2ban::params {
   # Define how you want to manage jails configuration:
   # "file" - To provide jails stanzas as a normal file
   # "concat" - To build them up using different fragments
-  #          - This option, preferred, permits the use of the fail2ban::jail define
+  #          - This option, preferred, permits the use of the
+  #            fail2ban::jail define
   $jails_config = ''
 
   $jails_file = $::operatingsystem ? {

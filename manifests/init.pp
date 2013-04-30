@@ -14,7 +14,8 @@
 #   Can be defined also by the (top scope) variable $fail2ban_myclass
 #
 # [*source*]
-#   Sets the content of source parameter for main configuration file (fail2ban.conf)
+#   Sets the content of source parameter for main configuration file
+#   (fail2ban.conf)
 #   If defined, fail2ban main config file will have the param: source => $source
 #   Can be defined also by the (top scope) variable $fail2ban_source
 #
@@ -38,8 +39,8 @@
 #
 # [*ignoreip*]
 #   Fail2ban will not ban a host which matches an address in this list.
-#   Can an IP address, a CIDR mask or a DNS host. Several addresses can be defined
-#   in an array.
+#   Can an IP address, a CIDR mask or a DNS host. Several addresses can be
+#   definedin an array.
 #   Default: 127.0.0.1/8
 #
 # [*bantime*]
@@ -83,23 +84,27 @@
 #
 # [*jails_config*]
 #   Define how you want to manage jails configuration:
-#    "file"   - To provide jail.local as a normal file. If you choose this option,
-#               set ONE of [*jails_source*] or [*jails_template*]
+#    "file"   - To provide jail.local as a normal file. If you choose this
+#               option,set ONE of [*jails_source*] or [*jails_template*]
 #    "concat" - To build it up using different fragments
-#             - This option, (preferred), permits the use of the fail2ban::jail define
+#             - This option, (preferred), permits the use of the
+#               fail2ban::jail define
 #   Default: empty. Uses "jail.local" from distribution, if any.
 #
 # [*jails_source*]
 #   Sets the content of source parameter for the jail.local configuration file
 #
 # [*jails_template*]
-#   Sets the path to the template to use as content for the jail.local configuration file
-#   If defined, fail2ban jails config file has: content => content("$jails_template")
+#   Sets the path to the template to use as content for the jail.local
+#   configuration file
+#   If defined, fail2ban jails config file has:
+#      content => content("$jails_template")
 #   Note source and template parameters are mutually exclusive: don't use both
 #
 # [*jails*]
-#   When using [*jails_template*] you can have some control on what jail is enabled or not
-#   setting an array named "jails", containing the names of the jail you want enabled.
+#   When using [*jails_template*] you can have some control on what jail is
+#   enabled or not setting an array named "jails", containing the names of the
+#   jail you want enabled.
 #
 # [*jails_template_header*]
 #   Path to the template to use as header with concat
