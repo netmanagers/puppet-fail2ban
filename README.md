@@ -20,7 +20,8 @@ For detailed info about the logic and usage patterns of Example42 modules check 
 
 * All parameters can be set using Hiera. See the manifests to see what can be set.
 
-* Install fail2ban with default settings
+* Install fail2ban with default settings. No configuration changes are done, and distro defaults are
+  respected.
 
         class { 'fail2ban': }
 
