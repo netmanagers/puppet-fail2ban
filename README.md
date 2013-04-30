@@ -32,7 +32,7 @@ For detailed info about the logic and usage patterns of Example42 modules check 
         }
 
 * Configure jails using a template file. An example is provided. In this case, you can enable or
-  disable jails using an array named "jails"
+  disable jails using an array named "jails". See the template "jail.local.erb".
 
         class { 'fail2ban':
           jails_config   => 'file',
