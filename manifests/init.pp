@@ -83,7 +83,7 @@
 #
 # [*jails_config*]
 #   Define how you want to manage jails configuration:
-#    "file"   - To provide jail.local as a normal file. If you choose this option, 
+#    "file"   - To provide jail.local as a normal file. If you choose this option,
 #               set ONE of [*jails_source*] or [*jails_template*]
 #    "concat" - To build it up using different fragments
 #             - This option, (preferred), permits the use of the fail2ban::jail define
@@ -438,43 +438,39 @@ class fail2ban (
   }
 
   # How to manage fail2ban jail.local configuration
-  case $fail2ban::jails_config {
-    'concat': { include fail2ban::jailsconcat }
-    'file': {
-      $array_jails = is_array($fail2ban::jails) ? {
-        false     => $fail2ban::jails ? {
-          ''      => [],
-          default => [$fail2ban::jails],
-        },
-        default   => $fail2ban::jails,
-      }
-
-      $manage_file_jails_source = $fail2ban::jails_source ? {
-        ''        => undef,
-        default   => $fail2ban::jails_source,
-      }
-    
-      $manage_file_jails_content = $fail2ban::jails_template ? {
-        ''        => undef,
-        default   => template($fail2ban::jails_template),
-      }
-   
-      file { 'jail.local':
-        ensure  => $fail2ban::manage_file,
-        path    => $fail2ban::jails_file,
-        mode    => $fail2ban::jails_file_mode,
-        owner   => $fail2ban::jails_file_owner,
-        group   => $fail2ban::jails_file_group,
-        require => Package[$fail2ban::package],
-        notify  => $fail2ban::manage_service_autorestart,
-        source  => $fail2ban::manage_file_jails_source,
-        content => $fail2ban::manage_file_jails_content,
-        replace => $fail2ban::manage_file_replace,
-        audit   => $fail2ban::manage_audit,
-        noop    => $fail2ban::bool_noops,
-      }
+  if $fail2ban::jails_config == 'file' {
+    $array_jails = is_array($fail2ban::jails) ? {
+      false     => $fail2ban::jails ? {
+        ''      => [],
+        default => [$fail2ban::jails],
+      },
+      default   => $fail2ban::jails,
     }
-    default: { }
+
+    $manage_file_jails_source = $fail2ban::jails_source ? {
+      ''        => undef,
+      default   => $fail2ban::jails_source,
+    }
+
+    $manage_file_jails_content = $fail2ban::jails_template ? {
+      ''        => undef,
+      default   => template($fail2ban::jails_template),
+    }
+
+    file { 'jail.local':
+      ensure  => $fail2ban::manage_file,
+      path    => $fail2ban::jails_file,
+      mode    => $fail2ban::jails_file_mode,
+      owner   => $fail2ban::jails_file_owner,
+      group   => $fail2ban::jails_file_group,
+      require => Package[$fail2ban::package],
+      notify  => $fail2ban::manage_service_autorestart,
+      source  => $fail2ban::manage_file_jails_source,
+      content => $fail2ban::manage_file_jails_content,
+      replace => $fail2ban::manage_file_replace,
+      audit   => $fail2ban::manage_audit,
+      noop    => $fail2ban::bool_noops,
+    }
   }
 
   # The whole fail2ban configuration directory can be recursively overriden

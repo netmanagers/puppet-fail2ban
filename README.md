@@ -24,7 +24,28 @@ For detailed info about the logic and usage patterns of Example42 modules check 
 
         class { 'fail2ban': }
 
-* You can configure and set a jail using fail2ban::jail
+* Configure jails using your own jail.local file
+
+        class { 'fail2ban':
+          jails_config => 'file',
+          jails_source => 'puppet:///path/to/your/jail.local'.
+        }
+
+* Configure jails using a template file. An example is provided. In this case, you can enable or
+  disable jails using an array named "jails"
+
+        class { 'fail2ban':
+          jails_config   => 'file',
+          jails_template => 'fail2ban/jail.local.erb',
+          jails          => ['ssh', 'imap'],
+        }
+
+* You can configure and set a jail using fail2ban::jail. In this case, stanzas for jail.local are
+  created using R.I.Pienaar's concat module. This method permits you better handling of your jails.
+
+        class { 'fail2ban':
+          jails_config   => 'concat',
+        }
 
         fail2ban::jail { 'sshd':
           port     => '22',
