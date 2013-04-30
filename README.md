@@ -1,4 +1,4 @@
-= Puppet module: fail2ban
+# Puppet module: fail2ban
 
 This is a Puppet module for fail2ban based on the second generation layout ("NextGen") of Example42 Puppet Modules.
 
@@ -84,7 +84,7 @@ For detailed info about the logic and usage patterns of Example42 modules check 
         }
 
 
-== USAGE - Overrides and Customizations
+## USAGE - Overrides and Customizations
 * Use custom sources for main config file 
 
         class { 'fail2ban':
@@ -112,7 +112,7 @@ For detailed info about the logic and usage patterns of Example42 modules check 
         }
 
 
-== USAGE - Example42 extensions management 
+## USAGE - Example42 extensions management 
 * Activate puppi (recommended, but disabled by default)
 
         class { 'fail2ban':
@@ -143,6 +143,6 @@ For detailed info about the logic and usage patterns of Example42 modules check 
         }
 
 
-== CONTINUOUS TESTING
+## CONTINUOUS TESTING
 
-Travis {<img src="https://travis-ci.org/example42/puppet-fail2ban.png?branch=master" alt="Build Status" />}[https://travis-ci.org/example42/puppet-fail2ban]
+Travis {<img src="https://travis-ci.org/netmanagers/puppet-fail2ban.png?branch=master" alt="Build Status" />}[https://travis-ci.org/netmanagers/puppet-fail2ban]
