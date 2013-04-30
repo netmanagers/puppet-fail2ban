@@ -28,8 +28,8 @@ describe 'fail2ban' do
     let(:facts) { {:operatingsystem => 'Debian' } }
     let(:params) { {:jails_config => 'file', :jails_template => 'fail2ban/jail.local.erb', :jails => 'ssh' } }
     it { should contain_file('jail.local').without_source }
-    it { should contain_file('jail.local').with_content(/"*ssh-iptables]
-enabled  = true*/) }
+    it { should contain_file('jail.local').with_content(/ssh-iptables\]
+enabled  = true/) }
   end
 
   describe 'Test jails managed throuh file - custom template' do
