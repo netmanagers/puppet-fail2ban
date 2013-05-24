@@ -33,7 +33,7 @@ action   = iptables[name=SSH, port=ssh, protocol=tcp]
 <% unless scope.lookupvar('fail2ban::mailto').empty? -%>
            sendmail-whois[name=SSH, dest=<%= scope.lookupvar('fail2ban::mailto') %>, sender=fail2ban@<%= fqdn %>]
 <% end -%>
-<% if operatingsystem == "Debian" -%>
+<% if @operatingsystem == "Debian" -%>
 logpath  = /var/log/auth.log
 <% else -%>
 logpath  = /var/log/secure
