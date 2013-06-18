@@ -8,9 +8,7 @@ filter   = <%= @real_filter %>
 port     = <%= @array_port * ',' %>
 <% end -%>
 <% if @array_action != [] -%>
-action   = <% @array_action.each do |a| -%>
-          <%= a %>
-          <% end -%>
+action   = <%= @array_action.join("\n\t") %>
 <% end -%>
 <% if @real_logpath != '' -%>
 logpath  = <%= @real_logpath %>
