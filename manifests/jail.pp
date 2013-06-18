@@ -21,6 +21,8 @@
 # $action   - The action to take when fail2ban finds $maxretry $filter-matching
 #             records in $logpath
 # $bantime  - How much time to apply the ban, in seconds
+# $findtime - The counter is set to zero if no match is found within "findtime"
+#             seconds.
 
 define fail2ban::jail (
   $jailname  = '',
@@ -32,6 +34,7 @@ define fail2ban::jail (
   $logpath   = '',
   $maxretry  = '',
   $bantime   = '',
+  $findtime  = '',
   $enable    = true ) {
 
   include concat::setup
@@ -119,7 +122,7 @@ define fail2ban::jail (
       notify  => Service['fail2ban'],
     }
   }
-  concat::fragment{ "fail2ban_jail_$name":
+  concat::fragment{ "fail2ban_jail_${name}":
     ensure  => $ensure,
     target  => $fail2ban::jails_file,
     content => template('fail2ban/concat/jail.local-stanza.erb'),
