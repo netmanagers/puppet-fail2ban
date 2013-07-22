@@ -105,6 +105,7 @@ define fail2ban::jail (
       owner   => $fail2ban::jails_file_owner,
       group   => $fail2ban::jails_file_group,
       notify  => Service['fail2ban'],
+      require => Package[$fail2ban::package],
     }
 
     concat::fragment{ 'fail2ban_jails_header':
