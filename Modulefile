@@ -1,5 +1,5 @@
 name    'netmanagers-fail2ban'
-version '1.0.4'
+version '1.0.5'
 author  'Javier Bertoli'
 license 'Apache2'
 project_page 'http://www.netmanagers.com.ar'
