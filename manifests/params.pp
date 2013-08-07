@@ -45,7 +45,7 @@ class fail2ban::params {
   }
 
   $config_file = $::operatingsystem ? {
-    default => '/etc/fail2ban/fail2ban.conf',
+    default => '/etc/fail2ban/fail2ban.local',
   }
 
   $config_file_mode = $::operatingsystem ? {

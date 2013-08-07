@@ -10,7 +10,8 @@ describe 'fail2ban' do
     it { should contain_package('fail2ban').with_ensure('present') }
     it { should contain_service('fail2ban').with_ensure('running') }
     it { should contain_service('fail2ban').with_enable('true') }
-    it { should contain_file('fail2ban.conf').with_ensure('present') }
+    it { should_not contain_file('fail2ban.local') }
+    it { should_not contain_file('jail.local') }
   end
 
   describe 'Test jails config undefined' do
@@ -49,7 +50,8 @@ enabled  = true/) }
     it { should contain_package('fail2ban').with_ensure('present') }
     it { should contain_service('fail2ban').with_ensure('running') }
     it { should contain_service('fail2ban').with_enable('true') }
-    it { should contain_file('fail2ban.conf').with_ensure('present') }
+    it { should_not contain_file('fail2ban.local') }
+    it { should_not contain_file('jail.local') }
     it { should contain_monitor__process('fail2ban_process').with_enable('true') }
   end
 
@@ -58,7 +60,7 @@ enabled  = true/) }
     it 'should remove Package[fail2ban]' do should contain_package('fail2ban').with_ensure('absent') end
     it 'should stop Service[fail2ban]' do should contain_service('fail2ban').with_ensure('stopped') end
     it 'should not enable at boot Service[fail2ban]' do should contain_service('fail2ban').with_enable('false') end
-    it 'should remove fail2ban configuration file' do should contain_file('fail2ban.conf').with_ensure('absent') end
+    it 'should remove fail2ban configuration file' do should contain_file('fail2ban.local').with_ensure('absent') end
     it { should contain_monitor__process('fail2ban_process').with_enable('false') }
   end
 
@@ -67,7 +69,8 @@ enabled  = true/) }
     it { should contain_package('fail2ban').with_ensure('present') }
     it 'should stop Service[fail2ban]' do should contain_service('fail2ban').with_ensure('stopped') end
     it 'should not enable at boot Service[fail2ban]' do should contain_service('fail2ban').with_enable('false') end
-    it { should contain_file('fail2ban.conf').with_ensure('present') }
+    it { should_not contain_file('fail2ban.local') }
+    it { should_not contain_file('jail.local') }
     it { should contain_monitor__process('fail2ban_process').with_enable('false') }
   end
 
@@ -77,7 +80,8 @@ enabled  = true/) }
     it { should_not contain_service('fail2ban').with_ensure('present') }
     it { should_not contain_service('fail2ban').with_ensure('absent') }
     it 'should not enable at boot Service[fail2ban]' do should contain_service('fail2ban').with_enable('false') end
-    it { should contain_file('fail2ban.conf').with_ensure('present') }
+    it { should_not contain_file('fail2ban.local') }
+    it { should_not contain_file('jail.local') }
     it { should contain_monitor__process('fail2ban_process').with_enable('false') }
   end
 
@@ -85,7 +89,7 @@ enabled  = true/) }
     let(:params) { {:noops => true, :monitor => true } }
     it { should contain_package('fail2ban').with_noop('true') }
     it { should contain_service('fail2ban').with_noop('true') }
-    it { should contain_file('fail2ban.conf').with_noop('true') }
+    it { should contain_file('fail2ban.local').with_noop('true') }
     it { should contain_monitor__process('fail2ban_process').with_noop('true') }
     it { should contain_monitor__process('fail2ban_process').with_noop('true') }
   end
@@ -93,18 +97,18 @@ enabled  = true/) }
   describe 'Test customizations - template' do
     let(:params) { {:template => "fail2ban/spec.erb" , :options => { 'opt_a' => 'value_a' } } }
     it 'should generate a valid template' do
-      content = catalogue.resource('file', 'fail2ban.conf').send(:parameters)[:content]
+      content = catalogue.resource('file', 'fail2ban.local').send(:parameters)[:content]
       content.should match "fqdn: rspec.example42.com"
     end
     it 'should generate a template that uses custom options' do
-      content = catalogue.resource('file', 'fail2ban.conf').send(:parameters)[:content]
+      content = catalogue.resource('file', 'fail2ban.local').send(:parameters)[:content]
       content.should match "value_a"
     end
   end
 
   describe 'Test customizations - source' do
     let(:params) { {:source => "puppet:///modules/fail2ban/spec"} }
-    it { should contain_file('fail2ban.conf').with_source('puppet:///modules/fail2ban/spec') }
+    it { should contain_file('fail2ban.local').with_source('puppet:///modules/fail2ban/spec') }
   end
 
   describe 'Test customizations - source_dir' do
@@ -115,14 +119,24 @@ enabled  = true/) }
   end
 
   describe 'Test customizations - custom class' do
-    let(:params) { {:my_class => "fail2ban::spec" } }
-    it { should contain_file('fail2ban.conf').with_content(/rspec.example42.com/) }
+    let(:params) do
+      {
+        :my_class => "fail2ban::spec",
+        :template => "fail2ban/spec.erb"
+      }
+    end
+    it { should contain_file('fail2ban.local').with_content(/rspec.example42.com/) }
   end
 
   describe 'Test service autorestart' do
-    let(:params) { {:service_autorestart => "no" } }
+    let(:params) do
+      { 
+        :service_autorestart => "no",
+        :template => "fail2ban/spec.erb"
+      }
+    end
     it 'should not automatically restart the service, when service_autorestart => false' do
-      content = catalogue.resource('file', 'fail2ban.conf').send(:parameters)[:notify]
+      content = catalogue.resource('file', 'fail2ban.local').send(:parameters)[:notify]
       content.should be_nil
     end
   end

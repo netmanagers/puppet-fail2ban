@@ -89,7 +89,7 @@ For detailed info about the logic and usage patterns of Example42 modules check 
 * Use custom sources for main config file 
 
         class { 'fail2ban':
-          source => [ "puppet:///modules/example42/fail2ban/fail2ban.conf-${hostname}" , "puppet:///modules/example42/fail2ban/fail2ban.conf" ], 
+          source => [ "puppet:///modules/example42/fail2ban/fail2ban.local-${hostname}" , "puppet:///modules/example42/fail2ban/fail2ban.local" ], 
         }
 
 
@@ -100,10 +100,12 @@ For detailed info about the logic and usage patterns of Example42 modules check 
           source_dir_purge => false, # Set to true to purge any existing file not present in $source_dir
         }
 
-* Use custom template for main config file. Note that template and source arguments are alternative. 
+* Use custom template for main config file. Note that template and source arguments are alternative.
+  In this new version, and following fail2ban recommendations, fail2ban.conf is untouched and 
+  fail2ban.local is created instead, overriding parameters.
 
         class { 'fail2ban':
-          template => 'example42/fail2ban/fail2ban.conf.erb',
+          template => 'example42/fail2ban/fail2ban.local.erb',
         }
 
 * Automatically include a custom subclass

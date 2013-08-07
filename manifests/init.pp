@@ -15,12 +15,12 @@
 #
 # [*source*]
 #   Sets the content of source parameter for main configuration file
-#   (fail2ban.conf)
+#   (fail2ban.local)
 #   If defined, fail2ban main config file will have the param: source => $source
 #   Can be defined also by the (top scope) variable $fail2ban_source
 #
 # [*source_dir*]
-#   If defined, the whole fail2ban configuration directory content is retrieved
+#   If defined, the whole fail2ban.configuration directory content is retrieved
 #   recursively from the specified source
 #   (source => $source_dir , recurse => true)
 #   Can be defined also by the (top scope) variable $fail2ban_source_dir
@@ -427,19 +427,24 @@ class fail2ban (
     noop       => $fail2ban::bool_noops,
   }
 
-  file { 'fail2ban.conf':
-    ensure  => $fail2ban::manage_file,
-    path    => $fail2ban::config_file,
-    mode    => $fail2ban::config_file_mode,
-    owner   => $fail2ban::config_file_owner,
-    group   => $fail2ban::config_file_group,
-    require => Package[$fail2ban::package],
-    notify  => $fail2ban::manage_service_autorestart,
-    source  => $fail2ban::manage_file_source,
-    content => $fail2ban::manage_file_content,
-    replace => $fail2ban::manage_file_replace,
-    audit   => $fail2ban::manage_audit,
-    noop    => $fail2ban::bool_noops,
+  if $fail2ban::manage_file_source
+  or $fail2ban::manage_file_content
+  or $manage_file == 'absent'
+  or $fail2ban::bool_noops {
+    file { 'fail2ban.local':
+      ensure  => $fail2ban::manage_file,
+      path    => $fail2ban::config_file,
+      mode    => $fail2ban::config_file_mode,
+      owner   => $fail2ban::config_file_owner,
+      group   => $fail2ban::config_file_group,
+      require => Package[$fail2ban::package],
+      notify  => $fail2ban::manage_service_autorestart,
+      source  => $fail2ban::manage_file_source,
+      content => $fail2ban::manage_file_content,
+      replace => $fail2ban::manage_file_replace,
+      audit   => $fail2ban::manage_audit,
+      noop    => $fail2ban::bool_noops,
+    }
   }
 
   # How to manage fail2ban jail.local configuration
@@ -462,23 +467,28 @@ class fail2ban (
       default   => template($fail2ban::jails_template),
     }
 
-    file { 'jail.local':
-      ensure  => $fail2ban::manage_file,
-      path    => $fail2ban::jails_file,
-      mode    => $fail2ban::jails_file_mode,
-      owner   => $fail2ban::jails_file_owner,
-      group   => $fail2ban::jails_file_group,
-      require => Package[$fail2ban::package],
-      notify  => $fail2ban::manage_service_autorestart,
-      source  => $fail2ban::manage_file_jails_source,
-      content => $fail2ban::manage_file_jails_content,
-      replace => $fail2ban::manage_file_replace,
-      audit   => $fail2ban::manage_audit,
-      noop    => $fail2ban::bool_noops,
+    if $fail2ban::manage_file_jails_source
+    or $fail2ban::manage_file_jails_content
+    or $manage_file == 'absent' 
+    or $fail2ban::bool_noops {
+      file { 'jail.local':
+        ensure  => $fail2ban::manage_file,
+        path    => $fail2ban::jails_file,
+        mode    => $fail2ban::jails_file_mode,
+        owner   => $fail2ban::jails_file_owner,
+        group   => $fail2ban::jails_file_group,
+        require => Package[$fail2ban::package],
+        notify  => $fail2ban::manage_service_autorestart,
+        source  => $fail2ban::manage_file_jails_source,
+        content => $fail2ban::manage_file_jails_content,
+        replace => $fail2ban::manage_file_replace,
+        audit   => $fail2ban::manage_audit,
+        noop    => $fail2ban::bool_noops,
+      }
     }
   }
 
-  # The whole fail2ban configuration directory can be recursively overriden
+  # The whole fail2ban.configuration directory can be recursively overriden
   if $fail2ban::source_dir {
     file { 'fail2ban.dir':
       ensure  => directory,

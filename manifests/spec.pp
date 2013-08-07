@@ -15,7 +15,7 @@ class fail2ban::spec inherits fail2ban {
   # Note that you can achieve this same result with just:
   # class { "fail2ban": template => "fail2ban/spec.erb" }
 
-  File['fail2ban.conf'] {
+  File['fail2ban.local'] {
     content => template('fail2ban/spec.erb'),
   }
 
