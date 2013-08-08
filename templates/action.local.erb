@@ -1,0 +1,33 @@
+# This file is managed by Puppet. DO NOT EDIT.
+#
+[INCLUDES]
+
+<% if @actionbefore != '' -%>
+before = <%= @actionbefore -%>
+<% end -%>
+<% if @actionafter != '' -%>
+after = <%= @actionafter -%>
+<% end -%>
+
+[Definition]
+
+<% if @array_start != [] -%>
+actionstart = <%= @array_start.join("\n\t") %>
+<% end -%>
+<% if @array_stop != [] -%>
+actionstop = <%= @array_stop.join("\n\t") %>
+<% end -%>
+<% if @array_check != [] -%>
+actioncheck = <%= @array_check.join("\n\t") %>
+<% end -%>
+<% if @array_ban != [] -%>
+actionban = <%= @array_ban.join("\n\t") %>
+<% end -%>
+<% if @array_unban != [] -%>
+actionunban = <%= @array_unban.join("\n\t") %>
+<% end -%>
+
+[Init]
+<% if @array_initvars != [] -%>
+<%= @array_initvars.join("\n") %>
+<% end -%>
