@@ -1,0 +1,19 @@
+# This file is managed by Puppet. DO NOT EDIT.
+#
+[INCLUDES]
+
+<% if @filterbefore != '' -%>
+before = <%= @filterbefore -%>
+<% end -%>
+<% if @filterafter != '' -%>
+after = <%= @filterafter -%>
+<% end -%>
+
+[Definition]
+
+failregex = <%= @array_failregex.join("\n\t") %>
+ignoreregex = <%= @array_ignoreregex.join("\n\t") %>
+
+<% if @array_definitionvars != [] -%>
+<%= @array_definitionvars.join("\n") %>
+<% end -%>

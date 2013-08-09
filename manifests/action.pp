@@ -4,51 +4,51 @@
 # Documentation: Manpages & http://www.fail2ban.org/wiki/index.php/MANUAL_0_8
 #
 # Supported arguments:
-# $actionname - The name you want to give the action.
-#               If not set, defaults to == default
-#               action local file is named after this value, like
-#               $name.local. The suffix "local" is automatically added.
+# $actionname     - The name you want to give the action.
+#                   If not set, defaults to == $title
+#                   action local file is named after this value, like
+#                   $actionname.local. The suffix "local" is automatically added.
 #
-# $enable     - true / false. If false, the rule _IS NOT ADDED_ to the
-#               action.local file
-#               Defaults to true
+# $actionenable   - true / false. If false, the rule _IS NOT ADDED_ to the
+#                   action.local file
+#                   Defaults to true
 #
-# $source     - Sets the content of source parameter for the new action
-#               It's mutually exclusive with $template.
+# $actionsource   - Sets the content of source parameter for the new action
+#                   It's mutually exclusive with $actiontemplate.
 #
-# $template   - Template to use when defining a new action
-#               It's mutually exclusive with $source.
+# $actiontemplate - Template to use when defining a new action
+#                   It's mutually exclusive with $actionsource.
 #
-# $start      - command(s) executed when the jail starts.
-#               Can be an array
-#               Used only with $template
+# $actionstart    - command(s) executed when the jail starts.
+#                   Can be an array
+#                   Used only with $actiontemplate
 #
-# $stop       - command(s) executed when the jail stops.
-#               Can be an array
-#               Used only with $template
+# $actionstop     - command(s) executed when the jail stops.
+#                   Can be an array
+#                   Used only with $actiontemplate
 #
-# $check      - the command ran before any other action.
-#               It aims to verify if the environment is still ok.
-#               Used only with $template
+# $actioncheck    - the command ran before any other action.
+#                   It aims to verify if the environment is still ok.
+#                   Used only with $actiontemplate
 #
-# $ban        - command(s) that bans the IP address after maxretry
-#               log lines matches within last findtime seconds.
-#               Used only with $template
+# $actionban      - command(s) that bans the IP address after maxretry
+#                   log lines matches within last findtime seconds.
+#                   Used only with $actiontemplate
 #
-# $unban      - command(s) that unbans the IP address after bantime.
-#               Used only with $template
+# $actionunban    - command(s) that unbans the IP address after bantime.
+#                   Used only with $actiontemplate
 #
-# $actionbefore - indicates an action file that is read before the
-#                 [Definition] section.
+# $actionbefore   - indicates an action file that is read before the
+#                   [Definition] section.
 #
-# $actionafter  - indicates an action file is read after the
-#                 [Definition] section.
+# $actionafter    - indicates an action file is read after the
+#                   [Definition] section.
 #
-# $initvars   - Variables for the INIT stanza of the action file.
-#               They are tuples in the format
-#                  "var = value"
-#               Can be an array like
-#               [ "var1 = value1", "var2 = value2",.., "varN = valueN" ]
+# $actioninitvars - Variables for the INIT stanza of the action file.
+#                   They are tuples in the format
+#                       "var = value"
+#                   Can be an array like
+#                   [ "var1 = value1", "var2 = value2",.., "varN = valueN" ]
 #
 define fail2ban::action (
   $actionname     = '',
@@ -62,7 +62,7 @@ define fail2ban::action (
   $actionbefore   = '',
   $actionafter    = '',
   $actioninitvars = '',
-  $enable   = true ) {
+  $actionenable   = true ) {
 
   include fail2ban
 
@@ -121,7 +121,7 @@ define fail2ban::action (
     default   => $actioninitvars,
   }
 
-  $ensure = bool2ensure($enable)
+  $ensure = bool2ensure($actionenable)
 
   $manage_file_source = $actionsource ? {
     ''        => undef,
