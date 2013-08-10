@@ -75,7 +75,7 @@ define fail2ban::action (
 
   $array_start = is_array($actionstart) ? {
     false     => $actionstart ? {
-      ''      => ['/bin/true'],
+      ''      => [],
       default => [$actionstart],
     },
     default   => $actionstart,
@@ -83,7 +83,7 @@ define fail2ban::action (
 
   $array_stop = is_array($actionstop) ? {
     false     => $actionstop? {
-      ''      => ['/bin/true'],
+      ''      => [],
       default => [$actionstop],
     },
     default   => $actionstop,
@@ -91,7 +91,7 @@ define fail2ban::action (
 
   $array_check = is_array($actioncheck) ? {
     false     => $actioncheck? {
-      ''      => ['/bin/true'],
+      ''      => [],
       default => [$actioncheck],
     },
     default   => $actioncheck,
@@ -99,7 +99,7 @@ define fail2ban::action (
 
   $array_ban = is_array($actionban) ? {
     false     => $actionban? {
-      ''      => ['/bin/true'],
+      ''      => [],
       default => [$actionban],
     },
     default   => $actionban,
@@ -107,7 +107,7 @@ define fail2ban::action (
 
   $array_unban = is_array($actionunban) ? {
     false     => $actionunban? {
-      ''      => ['/bin/true'],
+      ''      => [],
       default => [$actionunban],
     },
     default   => $actionunban,

@@ -24,11 +24,6 @@ describe 'fail2ban::action' do
 
 [Definition]
 
-actionstart = /bin/true
-actionstop = /bin/true
-actioncheck = /bin/true
-actionban = /bin/true
-actionunban = /bin/true
 
 [Init]
 "
