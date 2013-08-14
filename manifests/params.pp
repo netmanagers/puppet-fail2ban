@@ -89,7 +89,8 @@ class fail2ban::params {
   }
 
   $pid_file = $::operatingsystem ? {
-    default => '/var/run/fail2ban.pid',
+    /(?i:Debian|Ubuntu|Mint)/ => '/var/run/fail2ban/fail2ban.pid',
+    default                   => '/var/run/fail2ban.pid',
   }
 
   $data_dir = $::operatingsystem ? {
