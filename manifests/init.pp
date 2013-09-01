@@ -192,7 +192,7 @@
 # [*noops*]
 #   Set noop metaparameter to true for all the resources managed by the module.
 #   Basically you can run a dryrun for this specific module if you set
-#   this to true. Default: false
+#   this to true. Default: undef
 #
 # Default class params - As defined in fail2ban::params.
 # Note that these variables are mostly defined and used in the module itself,
@@ -346,7 +346,6 @@ class fail2ban (
   $bool_puppi=any2bool($puppi)
   $bool_debug=any2bool($debug)
   $bool_audit_only=any2bool($audit_only)
-  $bool_noops=any2bool($noops)
 
   ### Definition of some variables used in the module
   $manage_package = $fail2ban::bool_absent ? {
@@ -414,7 +413,7 @@ class fail2ban (
   ### Managed resources
   package { $fail2ban::package:
     ensure  => $fail2ban::manage_package,
-    noop    => $fail2ban::bool_noops,
+    noop    => $fail2ban::noops,
   }
 
   service { 'fail2ban':
@@ -424,13 +423,13 @@ class fail2ban (
     hasstatus  => $fail2ban::service_status,
     pattern    => $fail2ban::process,
     require    => Package[$fail2ban::package],
-    noop       => $fail2ban::bool_noops,
+    noop       => $fail2ban::noops,
   }
 
   if $fail2ban::manage_file_source
   or $fail2ban::manage_file_content
   or $manage_file == 'absent'
-  or $fail2ban::bool_noops {
+  or $fail2ban::noops {
     file { 'fail2ban.local':
       ensure  => $fail2ban::manage_file,
       path    => $fail2ban::config_file,
@@ -443,7 +442,7 @@ class fail2ban (
       content => $fail2ban::manage_file_content,
       replace => $fail2ban::manage_file_replace,
       audit   => $fail2ban::manage_audit,
-      noop    => $fail2ban::bool_noops,
+      noop    => $fail2ban::noops,
     }
   }
 
@@ -470,7 +469,7 @@ class fail2ban (
     if $fail2ban::manage_file_jails_source
     or $fail2ban::manage_file_jails_content
     or $manage_file == 'absent' 
-    or $fail2ban::bool_noops {
+    or $fail2ban::noops {
       file { 'jail.local':
         ensure  => $fail2ban::manage_file,
         path    => $fail2ban::jails_file,
@@ -483,7 +482,7 @@ class fail2ban (
         content => $fail2ban::manage_file_jails_content,
         replace => $fail2ban::manage_file_replace,
         audit   => $fail2ban::manage_audit,
-        noop    => $fail2ban::bool_noops,
+        noop    => $fail2ban::noops,
       }
     }
   }
@@ -501,7 +500,7 @@ class fail2ban (
       force   => $fail2ban::bool_source_dir_purge,
       replace => $fail2ban::manage_file_replace,
       audit   => $fail2ban::manage_audit,
-      noop    => $fail2ban::bool_noops,
+      noop    => $fail2ban::noops,
     }
   }
 
@@ -519,7 +518,7 @@ class fail2ban (
       ensure    => $fail2ban::manage_file,
       variables => $classvars,
       helper    => $fail2ban::puppi_helper,
-      noop      => $fail2ban::bool_noops,
+      noop      => $fail2ban::noops,
     }
   }
 
@@ -533,7 +532,7 @@ class fail2ban (
         target   => $fail2ban::monitor_target,
         tool     => $fail2ban::monitor_tool,
         enable   => $fail2ban::manage_monitor,
-        noop     => $fail2ban::bool_noops,
+        noop     => $fail2ban::noops,
       }
     }
     if $fail2ban::service != '' {
@@ -545,7 +544,7 @@ class fail2ban (
         argument => $fail2ban::process_args,
         tool     => $fail2ban::monitor_tool,
         enable   => $fail2ban::manage_monitor,
-        noop     => $fail2ban::bool_noops,
+        noop     => $fail2ban::noops,
       }
     }
   }
@@ -560,7 +559,7 @@ class fail2ban (
       owner   => 'root',
       group   => 'root',
       content => inline_template('<%= scope.to_hash.reject { |k,v| k.to_s =~ /(uptime.*|path|timestamp|free|.*password.*|.*psk.*|.*key)/ }.to_yaml %>'),
-      noop    => $fail2ban::bool_noops,
+      noop    => $fail2ban::noops,
     }
   }
 
