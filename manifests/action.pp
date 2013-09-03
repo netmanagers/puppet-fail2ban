@@ -145,7 +145,7 @@ define fail2ban::action (
     content => $manage_file_content,
     replace => $fail2ban::manage_file_replace,
     audit   => $fail2ban::manage_audit,
-    noop    => $fail2ban::bool_noops,
+    noop    => $fail2ban::noops,
   }
 
 }
