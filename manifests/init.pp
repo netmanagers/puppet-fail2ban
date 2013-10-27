@@ -468,7 +468,7 @@ class fail2ban (
 
     if $fail2ban::manage_file_jails_source
     or $fail2ban::manage_file_jails_content
-    or $manage_file == 'absent' 
+    or $manage_file == 'absent'
     or $fail2ban::noops {
       file { 'jail.local':
         ensure  => $fail2ban::manage_file,
