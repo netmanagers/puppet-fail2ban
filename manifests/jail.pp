@@ -37,7 +37,6 @@ define fail2ban::jail (
   $findtime  = '',
   $enable    = true ) {
 
-  include concat::setup
   include fail2ban
 
   $real_jailname = $jailname ? {

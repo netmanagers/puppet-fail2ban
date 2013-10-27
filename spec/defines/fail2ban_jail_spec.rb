@@ -27,7 +27,6 @@ filter   = fail2ban::jail
 "
     end
 
-    it { should include_class('concat::setup') }
     it { should contain_concat__fragment('fail2ban_jail_sample1').with_target('/etc/fail2ban/jail.local').with_content(expected) }
   end
 
@@ -63,7 +62,6 @@ findtime = 9000
 "
     end
 
-    it { should include_class('concat::setup') }
     it { should contain_concat__fragment('fail2ban_jail_sample1').with_target('/etc/fail2ban/jail.local').with_content(expected) }
   end
 end

@@ -3,7 +3,8 @@ fixtures:
     "puppi":    "git://github.com/example42/puppi.git"
     "monitor":  "git://github.com/example42/puppet-monitor.git"
     "iptables": "git://github.com/example42/puppet-iptables.git"
-    "concat":   "https://github.com/ripienaar/puppet-concat.git"
+    "stdlib":   "git://github.com/puppetlabs/puppetlabs-stdlib.git"
+    "concat":   "git://github.com/puppetlabs/puppetlabs-concat.git"
   symlinks:
     "fail2ban": "#{source_dir}"
 
