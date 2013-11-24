@@ -10,8 +10,8 @@ port     = <%= @array_port * ',' %>
 <% if @array_action != [] -%>
 action   = <%= @array_action.join("\n\t") %>
 <% end -%>
-<% if @real_logpath != '' -%>
-logpath  = <%= @real_logpath %>
+<% if @array_logpath != [] -%>
+logpath  = <%= @array_logpath.join("\n\t") %>
 <% end -%>
 <% if @real_maxretry != '' -%>
 maxretry = <%= @real_maxretry %>
