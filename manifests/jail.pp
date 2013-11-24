@@ -78,9 +78,12 @@ define fail2ban::jail (
     default   => $action,
   }
 
-  $real_logpath = $logpath ? {
-    ''      => '',
-    default => $logpath,
+  $array_logpath = is_array($logpath) ? {
+    false     => $logpath ? {
+      ''      => [],
+      default => [$logpath],
+    },
+    default   => $logpath,
   }
 
   $real_maxretry = $maxretry ? {

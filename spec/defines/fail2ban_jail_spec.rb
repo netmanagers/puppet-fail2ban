@@ -27,7 +27,9 @@ filter   = fail2ban::jail
 "
     end
 
-    it { should contain_concat__fragment('fail2ban_jail_sample1').with_target('/etc/fail2ban/jail.local').with_content(expected) }
+    it 'should create a named jail, enabled and with a filter of the same name' do
+      should contain_concat__fragment('fail2ban_jail_sample1').with_target('/etc/fail2ban/jail.local').with_content(expected)
+    end
   end
 
   describe 'Test jail.local is created with all options' do
@@ -62,6 +64,35 @@ findtime = 9000
 "
     end
 
-    it { should contain_concat__fragment('fail2ban_jail_sample1').with_target('/etc/fail2ban/jail.local').with_content(expected) }
+    it 'should create a customized jail, with own actions parsing a single log file' do
+      should contain_concat__fragment('fail2ban_jail_sample1').with_target('/etc/fail2ban/jail.local').with_content(expected)
+    end
+  end
+  describe 'Test jail.local is created with multiple logpaths' do
+    let(:params) do
+      {
+        :name     => 'title_sample2',
+        :jailname => 'sample2',
+        :port     => '44',
+        :logpath  => [ '/path/to/somelog_1', '/path/to/somelog_2' ],
+        :bantime  => '3003',
+      }
+    end
+    let(:expected) do
+"##################
+[sample2]
+enabled  = true
+filter   = sample2
+port     = 44
+logpath  = /path/to/somelog_1
+	/path/to/somelog_2
+bantime  = 3003
+
+"
+    end
+
+    it 'should create a customized jail, with own actions parsing a single log file' do
+      should contain_concat__fragment('fail2ban_jail_title_sample2').with_target('/etc/fail2ban/jail.local').with_content(expected)
+    end
   end
 end
