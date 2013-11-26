@@ -29,8 +29,9 @@ class fail2ban::params {
   }
 
   $process = $::operatingsystem ? {
-    /(?i:Debian|Ubuntu|Mint)/ => 'fail2ban-server',
-    default                   => 'fail2ban',
+    /(?i:Debian|Ubuntu|Mint)/                           => 'fail2ban-server',
+    /(?i:RedHat|Centos|Scientific|Fedora|OracleLinux)/  => 'fail2ban-server',
+    default                                             => 'fail2ban',
   }
 
   $process_args = $::operatingsystem ? {
