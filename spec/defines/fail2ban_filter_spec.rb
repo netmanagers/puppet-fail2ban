@@ -61,7 +61,7 @@ b = 2
 not c
 "
      end
- 
+
      it { should contain_file('sample2.local').with_path('/etc/fail2ban/filter.d/sample2.local').with_content(expected) }
      it { should contain_file('sample2.local').without_source }
    end
@@ -75,6 +75,7 @@ not c
     end
 
     it { should contain_file('sample3.local').with_path('/etc/fail2ban/filter.d/sample3.local').with_source('puppet:///some/path/to/source') }
+    it { should contain_file('sample3.local').with_content(nil) }
     it { should contain_file('sample3.local').without_template }
   end
 end

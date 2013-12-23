@@ -92,7 +92,10 @@ define fail2ban::filter (
 
   $manage_file_content = $filtertemplate ? {
     ''        => undef,
-    default   => template($filtertemplate),
+    default   => $filtersource ? {
+      ''        => template($filtertemplate),
+      default   => undef,
+    }
   }
 
   file { "${real_filtername}.local":
