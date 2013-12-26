@@ -39,6 +39,7 @@ filter   = fail2ban::jail
         :port     => ['42', '43'],
         :logpath  => '/path/to/somelog',
         :enable   => true,
+        :ignoreip => [ '10.3.2.0/24', '192.168.56.0/24' ],
         :findtime => '9000',
         :maxretry => '5',
         :bantime  => '3600',
@@ -53,6 +54,7 @@ filter   = fail2ban::jail
 [fail2ban::jail]
 enabled  = true
 filter   = fail2ban::jail
+ignoreip = 10.3.2.0/24 192.168.56.0/24
 port     = 42,43
 action   = iptables[name=SSH, port=ssh, protocol=tcp]
 	mail-whois[name=SSH, dest=yourmail@mail.com]
