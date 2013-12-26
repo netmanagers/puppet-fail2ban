@@ -4,6 +4,9 @@ enabled  = <%= @real_status %>
 <% if @real_filter != '' -%>
 filter   = <%= @real_filter %>
 <% end -%>
+<% if @array_ignoreip != [] -%>
+ignoreip = <%= @array_ignoreip * ' ' %>
+<% end -%>
 <% if @array_port != [] -%>
 port     = <%= @array_port * ',' %>
 <% end -%>
