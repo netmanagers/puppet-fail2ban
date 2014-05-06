@@ -133,6 +133,8 @@ class fail2ban::params {
   $template = ''
   $source_dir = ''
   $source_dir_purge = false
+  $source_dir_owner = 'root'
+  $source_dir_group = 'root'
   $options = ''
   $service_autorestart = true
   $version = 'present'

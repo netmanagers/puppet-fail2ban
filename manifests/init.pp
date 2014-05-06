@@ -31,6 +31,14 @@
 #   (source => $source_dir , recurse => true , purge => true)
 #   Can be defined also by the (top scope) variable $fail2ban_source_dir_purge
 #
+# [*source_dir_owner*]
+#   Configuration directory owner
+#   Default: root
+#
+# [*source_dir_group*]
+#   Configuration directory group
+#   Default: root
+#
 # [*template*]
 #   Sets the path to the template to use as content for main configuration file
 #   If defined, fail2ban main config file has: content => content("$template")
@@ -278,6 +286,8 @@ class fail2ban (
   $source                = params_lookup( 'source' ),
   $source_dir            = params_lookup( 'source_dir' ),
   $source_dir_purge      = params_lookup( 'source_dir_purge' ),
+  $source_dir_owner      = params_lookup( 'source_dir_owner' ),
+  $source_dir_group      = params_lookup( 'source_dir_group' ),
   $template              = params_lookup( 'template' ),
   $service_autorestart   = params_lookup( 'service_autorestart' , 'global' ),
   $options               = params_lookup( 'options' ),
@@ -497,6 +507,8 @@ class fail2ban (
       source  => $fail2ban::source_dir,
       recurse => true,
       purge   => $fail2ban::bool_source_dir_purge,
+      owner   => $fail2ban::source_dir_owner,
+      group   => $fail2ban::source_dir_group,
       force   => $fail2ban::bool_source_dir_purge,
       replace => $fail2ban::manage_file_replace,
       audit   => $fail2ban::manage_audit,
