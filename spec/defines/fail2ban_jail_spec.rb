@@ -37,6 +37,7 @@ filter   = fail2ban::jail
       {
         :name     => 'sample1',
         :port     => ['42', '43'],
+        :protocol => 'udp',
         :logpath  => '/path/to/somelog',
         :enable   => true,
         :ignoreip => [ '10.3.2.0/24', '192.168.56.0/24' ],
@@ -56,6 +57,7 @@ enabled  = true
 filter   = fail2ban::jail
 ignoreip = 10.3.2.0/24 192.168.56.0/24
 port     = 42,43
+protocol = udp
 action   = iptables[name=SSH, port=ssh, protocol=tcp]
 	mail-whois[name=SSH, dest=yourmail@mail.com]
 logpath  = /path/to/somelog

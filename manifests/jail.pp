@@ -17,6 +17,7 @@
 #             If empty, defaults to == $jailname.
 # $ignoreip - Don't ban a host which matches an address in this list.
 # $port     - The port to filter. It can be an array of ports.
+# $protocol - The protocol for this jail's action.
 # $logpath  - The log file to monitor
 # $maxretry - How many fails are acceptable
 # $action   - The action to take when fail2ban finds $maxretry $filter-matching
@@ -32,6 +33,7 @@ define fail2ban::jail (
   $filter    = '',
   $ignoreip  = '',
   $port      = '',
+  $protocol  = '',
   $action    = '',
   $logpath   = '',
   $maxretry  = '',
@@ -78,6 +80,11 @@ define fail2ban::jail (
       default => [$port],
     },
     default   => $port,
+  }
+
+  $real_protocol = $protocol ? {
+    ''      => undef,
+    default => $protocol,
   }
 
   $array_action = is_array($action) ? {

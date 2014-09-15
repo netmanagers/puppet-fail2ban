@@ -10,6 +10,9 @@ ignoreip = <%= @array_ignoreip * ' ' %>
 <% if @array_port != [] -%>
 port     = <%= @array_port * ',' %>
 <% end -%>
+<% if @real_protocol -%>
+protocol = <%= @real_protocol %>
+<% end -%>
 <% if @array_action != [] -%>
 action   = <%= @array_action.join("\n\t") %>
 <% end -%>

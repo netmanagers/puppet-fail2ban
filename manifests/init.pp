@@ -422,18 +422,18 @@ class fail2ban (
 
   ### Managed resources
   package { $fail2ban::package:
-    ensure  => $fail2ban::manage_package,
-    noop    => $fail2ban::noops,
+    ensure => $fail2ban::manage_package,
+    noop   => $fail2ban::noops,
   }
 
   service { 'fail2ban':
-    ensure     => $fail2ban::manage_service_ensure,
-    name       => $fail2ban::service,
-    enable     => $fail2ban::manage_service_enable,
-    hasstatus  => $fail2ban::service_status,
-    pattern    => $fail2ban::process,
-    require    => Package[$fail2ban::package],
-    noop       => $fail2ban::noops,
+    ensure    => $fail2ban::manage_service_ensure,
+    name      => $fail2ban::service,
+    enable    => $fail2ban::manage_service_enable,
+    hasstatus => $fail2ban::service_status,
+    pattern   => $fail2ban::process,
+    require   => Package[$fail2ban::package],
+    noop      => $fail2ban::noops,
   }
 
   if $fail2ban::manage_file_source
