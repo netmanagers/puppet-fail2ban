@@ -13,7 +13,11 @@ action   = iptables[name=IMAP, port=imap, protocol=tcp]
 <% unless scope.lookupvar('fail2ban::mailto').empty? -%>
            sendmail-whois[name=POP3, dest=<%= scope.lookupvar('fail2ban::mailto') %>, sender=fail2ban@<%= @fqdn %>]
 <% end -%>
+<% if @osfamily == "Debian" -%>
+logpath  = /var/log/mail.log
+<% else -%>
 logpath  = /var/log/maillog
+<% end -%>
 maxretry = 5
 
 [pop3-iptables]
@@ -23,7 +27,11 @@ action   = iptables[name=POP3, port=pop3, protocol=tcp]
 <% unless scope.lookupvar('fail2ban::mailto').empty? -%>
            sendmail-whois[name=POP3, dest=<%= scope.lookupvar('fail2ban::mailto') %>, sender=fail2ban@<%= @fqdn %>]
 <% end -%>
+<% if @osfamily == "Debian" -%>
+logpath  = /var/log/mail.log
+<% else -%>
 logpath  = /var/log/maillog
+<% end -%>
 maxretry = 5
 
 [ssh-iptables]
@@ -33,7 +41,7 @@ action   = iptables[name=SSH, port=ssh, protocol=tcp]
 <% unless scope.lookupvar('fail2ban::mailto').empty? -%>
            sendmail-whois[name=SSH, dest=<%= scope.lookupvar('fail2ban::mailto') %>, sender=fail2ban@<%= @fqdn %>]
 <% end -%>
-<% if @operatingsystem == "Debian" -%>
+<% if @osfamily == "Debian" -%>
 logpath  = /var/log/auth.log
 <% else -%>
 logpath  = /var/log/secure
