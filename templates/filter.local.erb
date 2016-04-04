@@ -17,3 +17,9 @@ ignoreregex = <%= @array_ignoreregex.join("\n\t") %>
 <% if @array_definitionvars != [] -%>
 <%= @array_definitionvars.join("\n") %>
 <% end -%>
+
+[Init]
+
+<% if @array_initvars != [] -%>
+<%= @array_initvars.join("\n") %>
+<% end -%>
