@@ -439,7 +439,7 @@ class fail2ban (
   if $fail2ban::manage_file_source
   or $fail2ban::manage_file_content
   or $manage_file == 'absent'
-  or $fail2ban::noops {
+  or $fail2ban::noops != false {
     file { 'fail2ban.local':
       ensure  => $fail2ban::manage_file,
       path    => $fail2ban::config_file,
@@ -479,7 +479,7 @@ class fail2ban (
     if $fail2ban::manage_file_jails_source
     or $fail2ban::manage_file_jails_content
     or $manage_file == 'absent'
-    or $fail2ban::noops {
+    or $fail2ban::noops != false {
       file { 'jail.local':
         ensure  => $fail2ban::manage_file,
         path    => $fail2ban::jails_file,
@@ -498,7 +498,7 @@ class fail2ban (
   }
 
   # The whole fail2ban.configuration directory can be recursively overriden
-  if $fail2ban::source_dir {
+  if $fail2ban::source_dir != '' {
     file { 'fail2ban.dir':
       ensure  => directory,
       path    => $fail2ban::config_dir,
@@ -518,7 +518,7 @@ class fail2ban (
 
 
   ### Include custom class if $my_class is set
-  if $fail2ban::my_class {
+  if $fail2ban::my_class != '' {
     include $fail2ban::my_class
   }
 
