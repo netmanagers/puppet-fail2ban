@@ -143,7 +143,6 @@ define fail2ban::jail (
     }
   }
   concat::fragment{ "fail2ban_jail_${name}":
-    ensure  => $ensure,
     target  => $fail2ban::jails_file,
     content => template('fail2ban/concat/jail.local-stanza.erb'),
     order   => $real_order,
