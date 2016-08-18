@@ -107,6 +107,11 @@ class fail2ban::params {
     default => '/var/log/fail2ban/fail2ban.log',
   }
 
+  $use_epel = $::operatingsystem ? {
+    /(?i:RedHat|Centos|Scientific|Fedora|OracleLinux)/  => true,
+    default                                             => false,
+  }
+
   $log_level = '3'
   $socket    = '/var/run/fail2ban/fail2ban.sock'
 
