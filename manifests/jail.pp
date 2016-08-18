@@ -119,6 +119,7 @@ define fail2ban::jail (
   if ! defined(Concat[$fail2ban::jails_file]) {
 
     concat { $fail2ban::jails_file:
+      ensure  => $ensure,
       mode    => $fail2ban::jails_file_mode,
       warn    => true,
       owner   => $fail2ban::jails_file_owner,
@@ -143,7 +144,6 @@ define fail2ban::jail (
     }
   }
   concat::fragment{ "fail2ban_jail_${name}":
-    ensure  => $ensure,
     target  => $fail2ban::jails_file,
     content => template('fail2ban/concat/jail.local-stanza.erb'),
     order   => $real_order,

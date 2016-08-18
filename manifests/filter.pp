@@ -33,22 +33,30 @@
 # $filterafter  - indicates an filter file is read after the
 #                 [Definition] section.
 #
-# $filterdefinitionvars   - Variables for the INIT stanza of the filter file.
+# $filterdefinitionvars   - Variables for the *Definition* stanza of the filter file.
+#               They are tuples in the format
+#                  "var = value"
+#               Can be an array like
+#               [ "var1 = value1", "var2 = value2",.., "varN = valueN" ]
+#
+# $filterinitvars   - Variables for the *Init* stanza of the filter file.
 #               They are tuples in the format
 #                  "var = value"
 #               Can be an array like
 #               [ "var1 = value1", "var2 = value2",.., "varN = valueN" ]
 #
 define fail2ban::filter (
-  $filtername     = '',
-  $filtersource   = '',
-  $filtertemplate = 'fail2ban/filter.local.erb',
-  $filterfailregex    = '',
-  $filterignoreregex     = '',
-  $filterbefore   = '',
-  $filterafter    = '',
+  $filtername           = '',
+  $filtersource         = '',
+  $filtertemplate       = 'fail2ban/filter.local.erb',
+  $filterfailregex      = '',
+  $filterignoreregex    = '',
+  $filterbefore         = '',
+  $filterafter          = '',
   $filterdefinitionvars = '',
-  $filterenable   = true ) {
+  $filterinitvars       = '',
+  $filterenable         = true
+) {
 
   include fail2ban
 
@@ -81,6 +89,14 @@ define fail2ban::filter (
       default => [$filterdefinitionvars],
     },
     default   => $filterdefinitionvars,
+  }
+
+  $array_initvars = is_array($filterinitvars) ? {
+    false     => $filterinitvars? {
+      ''      => [],
+      default => [$filterinitvars],
+    },
+    default   => $filterinitvars,
   }
 
   $ensure = bool2ensure($filterenable)

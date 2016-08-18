@@ -269,6 +269,10 @@
 #   Socket file used by fail2ban-client to communicate with fail2ban.
 #   Default: /var/run/fail2ban/fail2ban.sock
 #
+# [*use_epel*]
+#   Require the epel class before installing fail2ban packages.
+#   Default: false for all non-RedHat variantsd
+#
 # == Examples
 #
 # You can use this class in 2 ways:
@@ -344,7 +348,8 @@ class fail2ban (
   $jails_source          = params_lookup( 'jails_source' ),
   $jails_template        = params_lookup( 'jails_template' ),
   $jails_template_header = params_lookup( 'jails_template_header' ),
-  $jails_template_footer = params_lookup( 'jails_template_footer' )
+  $jails_template_footer = params_lookup( 'jails_template_footer' ),
+  $use_epel              = params_lookup( 'use_epel' ),
   ) inherits fail2ban::params {
 
   $bool_source_dir_purge=any2bool($source_dir_purge)
@@ -420,10 +425,17 @@ class fail2ban (
     default   => template($fail2ban::template),
   }
 
+  if $use_epel {
+    $pkg_require = Class['Epel']
+  } else {
+    $pkg_require = undef
+  }
+
   ### Managed resources
   package { $fail2ban::package:
-    ensure => $fail2ban::manage_package,
-    noop   => $fail2ban::noops,
+    ensure  => $fail2ban::manage_package,
+    noop    => $fail2ban::noops,
+    require => $pkg_require,
   }
 
   service { 'fail2ban':
